@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reparos — Laboratório Araraquara</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #181b24;
+    --bg3: #1e2230;
+    --card: #22263a;
+    --card2: #272b40;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #eef0f8;
+    --muted: #8b90a8;
+    --accent: #7c6fff;
+    --accent2: #a78bfa;
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.1);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251,191,36,0.1);
+    --red: #f87171;
+    --red-bg: rgba(248,113,113,0.1);
+    --blue: #60a5fa;
+    --blue-bg: rgba(96,165,250,0.1);
+    --orange: #fb923c;
+    --orange-bg: rgba(251,146,60,0.1);
+    --purple: #c084fc;
+    --purple-bg: rgba(192,132,252,0.1);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .logo-sub { font-size: 11px; color: var(--muted); font-weight: 400; }
+
+  .header-date {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--bg3);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  /* MAIN */
+  main { max-width: 1300px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+  /* STATS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 2.5rem;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .stat-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-desc { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+  .s-total .stat-value { color: var(--accent2); }
+  .s-reparo .stat-value { color: var(--green); }
+  .s-aprovacao .stat-value { color: var(--yellow); }
+  .s-sem .stat-value { color: var(--red); }
+  .s-analise .stat-value { color: var(--blue); }
+  .s-comp .stat-value { color: var(--orange); }
+
+  /* FILTROS */
+  .filters-bar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filter-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .filter-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .search-wrap {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 14px;
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 7px 12px 7px 34px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus { border-color: var(--accent); }
+
+  /* VENDEDORA TABS */
+  .vendedora-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .v-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .v-tab:hover { border-color: var(--border2); color: var(--text); }
+  .v-tab.active { border-color: var(--accent); color: var(--text); background: rgba(124,111,255,0.1); }
+  .v-tab .avatar {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Syne', sans-serif;
+  }
+  .v-tab .badge {
+    background: var(--bg3);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .v-tab.active .badge { background: var(--accent); color: #fff; }
+
+  /* CARDS DE REPARO */
+  .repairs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+  }
+  .repair-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .repair-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+  .repair-card.expanded { border-color: var(--accent); }
+
+  .card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .card-id {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .card-equip {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .card-cliente {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .s-em_reparo { background: var(--green-bg); color: var(--green); }
+  .s-ag_aprovacao { background: var(--yellow-bg); color: var(--yellow); }
+  .s-sem_aprovacao { background: var(--red-bg); color: var(--red); }
+  .s-em_analise { background: var(--blue-bg); color: var(--blue); }
+  .s-componentes { background: var(--orange-bg); color: var(--orange); }
+  .s-enviado { background: var(--purple-bg); color: var(--purple); }
+  .s-sem_status { background: rgba(139,144,168,0.1); color: var(--muted); }
+
+  .card-body {
+    padding: 1.25rem 1.5rem;
+  }
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .card-row:last-child { border-bottom: none; }
+  .row-label {
+    color: var(--muted);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .row-icon { font-size: 14px; }
+  .row-value { color: var(--text); font-weight: 500; }
+  .row-value.pending { color: var(--muted); font-style: italic; }
+
+  .card-obs {
+    margin-top: 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .card-obs strong { color: var(--text); display: block; font-size: 11px; margin-bottom: 4px; letter-spacing: 0.05em; }
+
+  .card-footer {
+    padding: 12px 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .vendedora-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .chip-avatar {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700;
+    font-family: 'Syne', sans-serif;
+  }
+  .days-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: var(--bg3);
+    color: var(--muted);
+  }
+  .days-badge.warn { background: var(--red-bg); color: var(--red); }
+  .days-badge.ok { background: var(--green-bg); color: var(--green); }
+
+  /* URGENCIA ALERT */
+  .alert-box {
+    background: rgba(248,113,113,0.08);
+    border: 1px solid rgba(248,113,113,0.25);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .alert-icon { font-size: 20px; margin-top: 2px; }
+  .alert-title { font-size: 13px; font-weight: 600; color: var(--red); margin-bottom: 4px; }
+  .alert-items { font-size: 12px; color: var(--muted); line-height: 1.8; }
+  .alert-items span { color: var(--text); }
+
+  /* VAZIO */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+  .empty-title { font-family: 'Syne', sans-serif; font-size: 18px; margin-bottom: 8px; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* TIMELINE */
+  .timeline {
+    display: flex;
+    gap: 0;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+  }
+  .tl-step {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 10px;
+    text-align: center;
+    position: relative;
+  }
+  .tl-label { color: var(--muted); margin-bottom: 2px; }
+  .tl-date { font-weight: 500; font-size: 11px; }
+  .tl-done { background: rgba(52,211,153,0.1); }
+  .tl-done .tl-date { color: var(--green); }
+  .tl-pending { background: var(--bg3); }
+  .tl-pending .tl-date { color: var(--muted); }
+  .tl-active { background: rgba(124,111,255,0.15); }
+  .tl-active .tl-date { color: var(--accent2); }
+
+  /* CONTAGEM NO TOPO */
+  .results-info {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .results-info strong { color: var(--text); }
+
+  @media (max-width: 700px) {
+    main { padding: 1.5rem 1rem; }
+    .repairs-grid { grid-template-columns: 1fr; }
+    .header-inner { padding: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🔧</div>
+      <div>
+        <div class="logo-text">Lab Reparos</div>
+        <div class="logo-sub">Acompanhamento · Araraquara</div>
+      </div>
+    </div>
+    <div class="header-date" id="headerDate"></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ALERTA URGÊNCIA -->
+  <div class="alert-box" id="alertBox"></div>
+
+  <!-- STATS -->
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <!-- FILTROS -->
+  <div class="filters-bar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="Buscar por cliente, equipamento, ID…">
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Status:</span>
+      <div id="statusFilters"></div>
+    </div>
+  </div>
+
+  <!-- ABAS VENDEDORAS -->
+  <div class="vendedora-tabs" id="vendedoraTabs"></div>
+
+  <!-- CONTAGEM -->
+  <div class="results-info" id="resultsInfo"></div>
+
+  <!-- CARDS -->
+  <div class="repairs-grid" id="repairsGrid"></div>
+
+</main>
+
+<script>
+const dados = [
+  { id:"2365", vendedora:"LIARA", cliente:"WAGNER FANELLI", equipamento:"PLACA PCI DBK2JP FONLAND", entrada:"08/04/2025", proposta:"-", componentes:"-", entrega:"-", situacao:"Sem aprovação", obs:"280 dias sem resposta - técnico solicitou informações, cliente não respondeu." },
+  { id:"2422", vendedora:"MIKAELLA", cliente:"CITROPACK", equipamento:"INVERSOR CFW 500 WEG 58044050", entrada:"29/10/2025", proposta:"30/10/2025", componentes:"-", entrega:"-", situacao:"Sem aprovação", obs:"194 dias sem resposta." },
+  { id:"2556", vendedora:"LILIAN", cliente:"CPA", equipamento:"SERVO DRIVER 220V~32,9A", entrada:"26/03/2026", proposta:"02/04/2026", componentes:"05/05", entrega:"-", situacao:"Em reparo", obs:"Equipamento está em bancada. Em reparo. Deve finalizar no dia 11/05." },
+  { id:"2557", vendedora:"LILIAN", cliente:"CPA", equipamento:"SERVO DRIVER 220V~32,9A", entrada:"26/03/2026", proposta:"02/04/2026", componentes:"05/05", entrega:"-", situacao:"", obs:"" },
+  { id:"2558", vendedora:"LILIAN", cliente:"CPA", equipamento:"SERVO DRIVER 380V~39A", entrada:"26/03/2026", proposta:"07/04/2026", componentes:"-", entrega:"-", situacao:"", obs:"" },
+  { id:"2571", vendedora:"GABRIELA", cliente:"EMBRAER", equipamento:"SOFT STARTER WEG SSW07", entrada:"06/04/2026", proposta:"13/04/2026", componentes:"-", entrega:"-", situacao:"Ag. Aprovação", obs:"35 dias sem respostas." },
+  { id:"2577", vendedora:"LIARA", cliente:"CITROPACK", equipamento:"SERVO DRIVER", entrada:"17/04/2026", proposta:"27/04/2026", componentes:"16/05", entrega:"-", situacao:"Componentes", obs:"Componentes estão na Karos. CPA é prioridade no momento. Esses dois serão os próximos. Deve iniciar reparo dia 15/05/2026." },
+  { id:"2578", vendedora:"LIARA", cliente:"CITROPACK", equipamento:"INVERSOR DE FREQUENCIA BYSM-30A", entrada:"17/04/2026", proposta:"27/04/2026", componentes:"16/05", entrega:"-", situacao:"", obs:"" },
+  { id:"2539", vendedora:"GABRIELA", cliente:"EMBRAER", equipamento:"PLACA ELETRÔNICA C-KFR70W/BP2N1W-210", entrada:"02/03/2026", proposta:"02/03/2026", componentes:"-", entrega:"-", situacao:"Em análise", obs:"Estamos tentando consertar, mas a princípio reparo foi declinado." },
+  { id:"2506", vendedora:"GABRIELA", cliente:"EMBRAER", equipamento:"PLACA ELETRÔNICA S000BW2AD7370128", entrada:"03/02/2026", proposta:"03/02/2026", componentes:"-", entrega:"-", situacao:"Em reparo", obs:"Carlos está reparando nesse momento." },
+  { id:"2582", vendedora:"BARBARA", cliente:"BIG DUTCHMAN BRASIL", equipamento:"MOTOR STALLKAMP 5200400 M80B14", entrada:"06/05/2026", proposta:"-", componentes:"-", entrega:"-", situacao:"Enviado", obs:"Mandamos o equipamento para ELETROPAM analisar." },
+  { id:"2583", vendedora:"BARBARA", cliente:"BIG DUTCHMAN BRASIL", equipamento:"MOTOR STALLKAMP 5200400 M80B14 (2)", entrada:"06/05/2026", proposta:"-", componentes:"-", entrega:"-", situacao:"", obs:"" },
+  { id:"2584", vendedora:"BARBARA", cliente:"BIG DUTCHMAN BRASIL", equipamento:"MOTOR STALLKAMP 5200400 M80B14 (3)", entrada:"06/05/2026", proposta:"-", componentes:"-", entrega:"-", situacao:"", obs:"" },
+  { id:"2585", vendedora:"BARBARA", cliente:"BIG DUTCHMAN BRASIL", equipamento:"MOTOR STALLKAMP M80B14C", entrada:"06/05/2026", proposta:"-", componentes:"-", entrega:"-", situacao:"", obs:"" },
+];
+
+const vendedoraCores = {
+  LIARA:    { bg:"#7c6fff22", text:"#a78bfa", sigla:"LI" },
+  MIKAELLA: { bg:"#f472b622", text:"#f472b6", sigla:"MI" },
+  LILIAN:   { bg:"#34d39922", text:"#34d399", sigla:"LL" },
+  GABRIELA: { bg:"#60a5fa22", text:"#60a5fa", sigla:"GA" },
+  BARBARA:  { bg:"#fb923c22", text:"#fb923c", sigla:"BA" },
+};
+
+const statusMap = {
+  "Em reparo":     { cls:"s-em_reparo",    label:"Em Reparo",      icon:"🔧" },
+  "Ag. Aprovação": { cls:"s-ag_aprovacao", label:"Ag. Aprovação",  icon:"⏳" },
+  "Sem aprovação": { cls:"s-sem_aprovacao",label:"Sem Aprovação",  icon:"❌" },
+  "Em análise":    { cls:"s-em_analise",   label:"Em Análise",     icon:"🔬" },
+  "Componentes":   { cls:"s-componentes",  label:"Componentes",    icon:"📦" },
+  "Enviado":       { cls:"s-enviado",      label:"Enviado",        icon:"🚚" },
+  "":              { cls:"s-sem_status",   label:"Sem Status",     icon:"⚪" },
+};
+
+function normalizeStatus(s) {
+  s = (s||"").trim();
+  if (!s) return "";
+  if (s.toLowerCase().includes("reparo") && s.toLowerCase().includes("em")) return "Em reparo";
+  if (s.toLowerCase().includes("ag") && s.toLowerCase().includes("aprova")) return "Ag. Aprovação";
+  if (s.toLowerCase().includes("sem aprova")) return "Sem aprovação";
+  if (s.toLowerCase().includes("análise") || s.toLowerCase().includes("analise")) return "Em análise";
+  if (s.toLowerCase().includes("componente")) return "Componentes";
+  if (s.toLowerCase().includes("enviado")) return "Enviado";
+  return s;
+}
+
+dados.forEach(d => { d.situacao = normalizeStatus(d.situacao); });
+
+function calcDias(dataStr) {
+  const parts = dataStr.split("/");
+  if (parts.length !== 3) return null;
+  const d = new Date(parts[2], parts[1]-1, parts[0]);
+  const hoje = new Date();
+  return Math.floor((hoje - d)/(1000*60*60*24));
+}
+
+let filtroVendedora = "TODAS";
+let filtroStatus = "TODOS";
+let busca = "";
+
+function render() {
+  const filtrados = dados.filter(d => {
+    const matchV = filtroVendedora === "TODAS" || d.vendedora === filtroVendedora;
+    const matchS = filtroStatus === "TODOS" || d.situacao === filtroStatus;
+    const b = busca.toLowerCase();
+    const matchB = !b || d.id.includes(b) || d.cliente.toLowerCase().includes(b)
+      || d.equipamento.toLowerCase().includes(b) || d.vendedora.toLowerCase().includes(b);
+    return matchV && matchS && matchB;
+  });
+
+  document.getElementById("resultsInfo").innerHTML = `Exibindo <strong>${filtrados.length}</strong> de <strong>${dados.length}</strong> reparos`;
+
+  const grid = document.getElementById("repairsGrid");
+  if (filtrados.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🔍</div><div class="empty-title">Nenhum reparo encontrado</div><p>Tente ajustar os filtros ou a busca.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtrados.map(d => {
+    const st = statusMap[d.situacao] || statusMap[""];
+    const vc = vendedoraCores[d.vendedora] || { bg:"#88888822", text:"#888", sigla:d.vendedora.slice(0,2) };
+    const dias = calcDias(d.entrada);
+
+    const tlSteps = [
+      { label:"Entrada", date: d.entrada },
+      { label:"Proposta", date: d.proposta },
+      { label:"Componentes", date: d.componentes },
+      { label:"Entrega", date: d.entrega || "-" },
+    ];
+
+    const tlHtml = tlSteps.map((s, i) => {
+      const isDone = s.date && s.date !== "-";
+      const isActive = !isDone && tlSteps.slice(0,i).every(x => x.date && x.date !== "-");
+      const cls = isDone ? "tl-done" : (isActive ? "tl-active" : "tl-pending");
+      return `<div class="tl-step ${cls}"><div class="tl-label">${s.label}</div><div class="tl-date">${isDone ? s.date : "—"}</div></div>`;
+    }).join("");
+
+    const daysBadge = dias !== null
+      ? `<span class="days-badge ${dias > 60 ? "warn" : "ok"}">${dias}d desde entrada</span>`
+      : "";
+
+    const obsHtml = d.obs ? `<div class="card-obs"><strong>💬 Observação</strong>${d.obs}</div>` : "";
+
+    return `<div class="repair-card">
+      <div class="card-header">
+        <div>
+          <div class="card-id">#${d.id}</div>
+          <div class="card-equip">${d.equipamento}</div>
+          <div class="card-cliente">📍 ${d.cliente}</div>
+        </div>
+        <span class="status-badge ${st.cls}">${st.icon} ${st.label}</span>
+      </div>
+      <div class="card-body">
+        <div style="margin-bottom:10px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">Linha do Tempo</div>
+          <div class="timeline">${tlHtml}</div>
+        </div>
+        ${obsHtml}
+      </div>
+      <div class="card-footer">
+        <div class="vendedora-chip">
+          <div class="chip-avatar" style="background:${vc.bg};color:${vc.text}">${vc.sigla}</div>
+          <span style="font-size:12px;color:var(--muted)">${d.vendedora}</span>
+        </div>
+        ${daysBadge}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderStats() {
+  const total = dados.length;
+  const emReparo = dados.filter(d => d.situacao === "Em reparo").length;
+  const agAprova = dados.filter(d => d.situacao === "Ag. Aprovação").length;
+  const semAprova = dados.filter(d => d.situacao === "Sem aprovação").length;
+  const emAnalise = dados.filter(d => d.situacao === "Em análise").length;
+  const comp = dados.filter(d => d.situacao === "Componentes").length;
+
+  document.getElementById("statsGrid").innerHTML = `
+    <div class="stat-card s-total">
+      <div class="stat-label">Total de Reparos</div>
+      <div class="stat-value">${total}</div>
+      <div class="stat-desc">em acompanhamento</div>
+    </div>
+    <div class="stat-card s-reparo">
+      <div class="stat-label">Em Reparo</div>
+      <div class="stat-value">${emReparo}</div>
+      <div class="stat-desc">sendo trabalhados agora</div>
+    </div>
+    <div class="stat-card s-aprovacao">
+      <div class="stat-label">Ag. Aprovação</div>
+      <div class="stat-value">${agAprova}</div>
+      <div class="stat-desc">aguardando cliente</div>
+    </div>
+    <div class="stat-card s-sem">
+      <div class="stat-label">Sem Aprovação</div>
+      <div class="stat-value">${semAprova}</div>
+      <div class="stat-desc">sem resposta do cliente</div>
+    </div>
+    <div class="stat-card s-analise">
+      <div class="stat-label">Em Análise</div>
+      <div class="stat-value">${emAnalise}</div>
+      <div class="stat-desc">em diagnóstico</div>
+    </div>
+    <div class="stat-card s-comp">
+      <div class="stat-label">Componentes</div>
+      <div class="stat-value">${comp}</div>
+      <div class="stat-desc">aguardando peças</div>
+    </div>
+  `;
+}
+
+function renderVendedoraTabs() {
+  const vendedoras = ["TODAS", ...Object.keys(vendedoraCores)];
+  document.getElementById("vendedoraTabs").innerHTML = vendedoras.map(v => {
+    const count = v === "TODAS" ? dados.length : dados.filter(d => d.vendedora === v).length;
+    const vc = v !== "TODAS" ? vendedoraCores[v] : { bg:"#ffffff11", text:"var(--muted)", sigla:"★" };
+    const isActive = filtroVendedora === v;
+    return `<div class="v-tab ${isActive ? "active" : ""}" onclick="setVendedora('${v}')">
+      <div class="avatar" style="background:${vc.bg};color:${vc.text}">${vc.sigla}</div>
+      ${v === "TODAS" ? "Todas" : v.charAt(0) + v.slice(1).toLowerCase()}
+      <span class="badge">${count}</span>
+    </div>`;
+  }).join("");
+}
+
+function renderStatusFilters() {
+  const statuses = ["TODOS", ...Object.keys(statusMap).filter(s => s !== "")];
+  document.getElementById("statusFilters").innerHTML = `<div style="display:flex;gap:6px;flex-wrap:wrap">` +
+    statuses.map(s => {
+      const st = statusMap[s];
+      const isActive = filtroStatus === s;
+      const label = s === "TODOS" ? "Todos" : (st ? `${st.icon} ${st.label}` : s);
+      return `<button class="filter-btn ${isActive ? "active" : ""}" onclick="setStatus('${s}')">${label}</button>`;
+    }).join("") + `</div>`;
+}
+
+function renderAlert() {
+  const urgentes = dados.filter(d => {
+    if (d.situacao !== "Sem aprovação") return false;
+    const obs = d.obs.toLowerCase();
+    return obs.includes("dias");
+  });
+  const box = document.getElementById("alertBox");
+  if (urgentes.length === 0) { box.style.display = "none"; return; }
+  box.innerHTML = `
+    <div class="alert-icon">🚨</div>
+    <div>
+      <div class="alert-title">Reparos sem resposta — Ação necessária</div>
+      <div class="alert-items">${urgentes.map(u => `<span>#${u.id}</span> · ${u.cliente} · ${u.equipamento} — ${u.obs}`).join("<br>")}</div>
+    </div>
+  `;
+}
+
+function setVendedora(v) { filtroVendedora = v; renderVendedoraTabs(); render(); }
+function setStatus(s) { filtroStatus = s; renderStatusFilters(); render(); }
+
+document.getElementById("searchInput").addEventListener("input", e => { busca = e.target.value; render(); });
+
+// Data no header
+const hoje = new Date();
+document.getElementById("headerDate").textContent = hoje.toLocaleDateString("pt-BR", { weekday:"long", day:"2-digit", month:"long", year:"numeric" });
+
+renderStats();
+renderVendedoraTabs();
+renderStatusFilters();
+renderAlert();
+render();
+</script>
+</body>
+</html>
